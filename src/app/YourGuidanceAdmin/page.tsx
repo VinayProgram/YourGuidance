@@ -1,10 +1,15 @@
 'use client'
 import React from 'react'
 import LoginForm from './components/login'
-
+import './login.css'
+import { Card } from 'antd'
 const page = () => {
   return (
-    <div><LoginForm/></div>
+    <main className='main'>
+      <Card title='login'>
+      <LoginForm/>
+      </Card>
+      </main>
   )
 }
 

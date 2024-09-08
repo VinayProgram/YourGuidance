@@ -3,7 +3,7 @@ import CardOne from './Cards'
 
 const Posts = () => {
   return (
-    <main style={{backgroundColor:'black'}}>
+    <main >
         <CardOne/>
     </main>
   )

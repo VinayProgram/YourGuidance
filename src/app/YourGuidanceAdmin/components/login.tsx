@@ -1,6 +1,6 @@
 import React from 'react';
 import type { FormProps } from 'antd';
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Form, Input } from 'antd';
 
 type FieldType = {
   username?: string;
@@ -43,19 +43,11 @@ const LoginForm: React.FC = () => (
       <Input.Password />
     </Form.Item>
 
-    <Form.Item<FieldType>
-      name="remember"
-      valuePropName="checked"
-      wrapperCol={{ offset: 8, span: 16 }}
-    >
-      <Checkbox>Remember me</Checkbox>
-    </Form.Item>
 
-    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
       <Button type="primary" htmlType="submit">
         Submit
       </Button>
-    </Form.Item>
+    
   </Form>
 );
 
