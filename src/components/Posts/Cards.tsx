@@ -1,6 +1,7 @@
 import React from 'react';
 import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
 import { Avatar, Card } from 'antd';
+import Image from 'next/image';
 
 const { Meta } = Card;
 
@@ -8,7 +9,7 @@ const CardOne: React.FC = () => (
   <Card
     style={{ width: 300 }}
     cover={
-      <img
+      <Image
         alt="example"
         src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
       />
