@@ -14,7 +14,7 @@ const App: React.FC = () => {
   React.useEffect(()=>{RegisterVisit(),getPosts()},[])
   const getPosts=async()=>{
     const posts=await getAndDisplayPosts();
-    posts&&setPosts(posts)
+    posts&&setPosts(posts)    
   }
   return (
     <Layout style={{ height: "100vh" }}>

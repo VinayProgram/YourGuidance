@@ -1,16 +1,16 @@
-'use client'
-import React from 'react'
-import LoginForm from './components/login'
-import './login.css'
-import { Card } from 'antd'
+"use client";
+import React from "react";
+import LoginForm from "./components/login";
+import "./login.css";
+import { Card } from "antd";
 const page = () => {
   return (
-    <main className='main'>
-      <Card title='login'>
-      <LoginForm/>
+    <main className="main">
+      <Card title="login">
+        <LoginForm />
       </Card>
-      </main>
-  )
-}
+    </main>
+  );
+};
 
-export default page
+export default page;
