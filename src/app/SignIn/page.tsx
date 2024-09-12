@@ -5,11 +5,14 @@ import "./login.css";
 import { Button, Card } from "antd";
 import { signInWithPopup, onAuthStateChanged } from 'firebase/auth';
 import { auth, provider } from "@/config";
+import { useRouter } from "next/navigation";
 const Login = () => {
+  const router = useRouter()
   React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
        console.log(user)
+       router.push('/Users')
       }
     });
     return () => unsubscribe();
@@ -25,8 +28,6 @@ const Login = () => {
   const handleGoogleSignup = async () => {
     try {
       await signInWithPopup(auth, provider);
-      
-      
     } catch (error) {
       console.error('Google Signup Error:', error);
       
