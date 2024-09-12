@@ -22,13 +22,23 @@ const Login = () => {
       console.error('Google Sign-In Error:', error);
     }
   };
-
+  const handleGoogleSignup = async () => {
+    try {
+      await signInWithPopup(auth, provider);
+      
+      
+    } catch (error) {
+      console.error('Google Signup Error:', error);
+      
+    }
+  };
 
   return (
     <main className="main">
       <Card title="login">
         <LoginForm />
         <Button onClick={handleGoogleSignIn}>Sign In with Google</Button>
+        <Button onClick={handleGoogleSignup}>Sign Up with Google</Button>
       </Card>
       
     </main>
