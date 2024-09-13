@@ -3,7 +3,7 @@ import React from "react";
 import LoginForm from "./components/login";
 import "./login.css";
 import { Button, Card } from "antd";
-import { signInWithPopup, onAuthStateChanged } from 'firebase/auth';
+import { signInWithPopup, onAuthStateChanged, signInWithRedirect } from 'firebase/auth';
 import { auth, provider } from "@/config";
 import { LoginOutlined } from '@ant-design/icons';
 // import { useRouter } from "next/navigation";
@@ -19,14 +19,24 @@ const Login = () => {
     return () => unsubscribe();
   }, []);
 
-  const handleGoogleSignIn = async (e:React.MouseEvent<HTMLButtonElement>) => {
-e.preventDefault()
-    try {
+
+
+const handleGoogleSignIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  e.preventDefault();
+  
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  try {
+    if (isMobile) {
+      await signInWithRedirect(auth, provider);
+    } else {
       await signInWithPopup(auth, provider);
-    } catch (error) {
-      console.error('Google Sign-In Error:', error);
     }
-  };
+  } catch (error) {
+    console.error('Google Sign-In Error:', error);
+  }
+};
+
   const handleGoogleSignup = async (e:React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     try {
