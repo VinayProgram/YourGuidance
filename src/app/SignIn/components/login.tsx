@@ -1,6 +1,6 @@
 import React from 'react';
 import type { FormProps } from 'antd';
-import { Button, Form, Input } from 'antd';
+import { Button, Flex, Form, Input } from 'antd';
 import { onAuthStateChanged, signInWithRedirect } from 'firebase/auth';
 import { auth, provider } from '@/config';
 import {LoginOutlined} from '@ant-design/icons'
@@ -69,12 +69,12 @@ const handleGoogleSignIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
     </Form.Item>
 
 
+    <Flex justify='space-around'>
       <Button type="primary" htmlType="submit">
         Submit
       </Button>
-
       <Button onClick={handleGoogleSignIn} icon={<LoginOutlined/>} >Sign In with Google</Button>
-
+      </Flex>
   </Form>
 );}
 
