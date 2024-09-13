@@ -31,7 +31,7 @@ const Posts = () => {
             >
               <p><strong>Author:</strong> {post.author}</p>
               <p><strong>Date:</strong> {moment(post.timestamp).format("MMMM Do YYYY, h:mm:ss a")}</p>
-              <p><strong>Tags:</strong> {post.tags.join(", ")}</p>
+              <p><strong>Tags:</strong> {Array.isArray(post.tags)?post.tags.join(", "):post.tags}</p>
               <p>{post.content}</p>
             </Card>
             </>
