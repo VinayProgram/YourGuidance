@@ -1,9 +1,11 @@
-import React from 'react'
+'use client'
+import CreatePosts from "./components/Create.Posts";
 
-const page = () => {
-  return (
-    <div>Welcome to Admin</div>
-  )
-}
 
-export default page
+const LandingPage: React.FC = () => {
+ return(
+  <CreatePosts/>
+ )
+};
+
+export default LandingPage;

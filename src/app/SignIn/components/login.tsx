@@ -1,9 +1,10 @@
 import React from 'react';
 import type { FormProps } from 'antd';
 import { Button, Flex, Form, Input } from 'antd';
-import { onAuthStateChanged, signInWithRedirect } from 'firebase/auth';
+import { onAuthStateChanged, signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '@/config';
 import {LoginOutlined} from '@ant-design/icons'
+import { useRouter } from 'next/navigation';
 type FieldType = {
   username?: string;
   password?: string;
@@ -19,22 +20,26 @@ const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
 };
 
 const LoginForm: React.FC = () => {
+  const router=useRouter()
+ const [token,setToken]= React.useState('')
   React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-       console.log(user)
-      //  router.push('/Users')
+       router.push('/Users')
       }
     });
     return () => unsubscribe();
-  }, []);
+  }, [token]);
 
 
 
 const handleGoogleSignIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
   e.preventDefault();
   try {
-      await signInWithRedirect(auth, provider);   
+    const result = await signInWithPopup(auth, provider);
+    const token = await result.user.getIdToken();
+    setToken(token)
+    document.cookie = `token=${token}; path=/;`;
   } catch (error) {
     console.error('Google Sign-In Error:', error);
   }
