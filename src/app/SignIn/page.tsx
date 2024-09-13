@@ -5,28 +5,32 @@ import "./login.css";
 import { Button, Card } from "antd";
 import { signInWithPopup, onAuthStateChanged } from 'firebase/auth';
 import { auth, provider } from "@/config";
-import { useRouter } from "next/navigation";
+import { LoginOutlined } from '@ant-design/icons';
+// import { useRouter } from "next/navigation";
 const Login = () => {
-  const router = useRouter()
+  // const router = useRouter()
   React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
        console.log(user)
-       router.push('/Users')
+      //  router.push('/Users')
       }
     });
     return () => unsubscribe();
   }, []);
 
-  const handleGoogleSignIn = async () => {
+  const handleGoogleSignIn = async (e:React.MouseEvent<HTMLButtonElement>) => {
+e.preventDefault()
     try {
       await signInWithPopup(auth, provider);
     } catch (error) {
       console.error('Google Sign-In Error:', error);
     }
   };
-  const handleGoogleSignup = async () => {
+  const handleGoogleSignup = async (e:React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
     try {
+      
       await signInWithPopup(auth, provider);
     } catch (error) {
       console.error('Google Signup Error:', error);
@@ -38,8 +42,10 @@ const Login = () => {
     <main className="main">
       <Card title="login">
         <LoginForm />
-        <Button onClick={handleGoogleSignIn}>Sign In with Google</Button>
-        <Button onClick={handleGoogleSignup}>Sign Up with Google</Button>
+        <span >
+        <Button onClick={handleGoogleSignIn} icon={<LoginOutlined/>} >Sign In with Google</Button>
+        <Button onClick={handleGoogleSignup} style={{marginLeft:'10px'}} >Sign Up with Google</Button>
+        </span>
       </Card>
       
     </main>
