@@ -50,7 +50,7 @@ export const savePost = async (post: PostDTO) => {
   
 
 
-  export const POSTS_LIMIT = 1; // Number of posts to fetch per batch
+  export const POSTS_LIMIT = 20; // Number of posts to fetch per batch
 
   export const getAndDisplayPosts = async (lastVisible?: QueryDocumentSnapshot<DocumentData, DocumentData>|null) => {
     try {
