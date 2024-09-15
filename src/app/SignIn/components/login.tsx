@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import type { FormProps } from "antd";
 import { Button, Flex, Form, Input } from "antd";
@@ -34,10 +35,12 @@ const LoginForm: React.FC = () => {
   const handleGoogleSignIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
+      if (typeof window !== "undefined") {
       const result = await signInWithPopup(auth, provider);
       const token = await result.user.getIdToken();
       setToken(token);
       document.cookie = `token=${token}; path=/;`;
+      }
     } catch (error) {
       console.error("Google Sign-In Error:", error);
     }

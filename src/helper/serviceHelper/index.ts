@@ -1,8 +1,11 @@
+"use client"; 
+
 import { StoreVisitorInfo } from "@/services/visitors";
 import { VisitorDTO } from "@/types/common.dto";
 
 export const RegisterVisit = async () => {
     // Sample visitor data
+    if(typeof window!=undefined){
     const visitorInfo: VisitorDTO = {
       ip: await getUserIP(), // You can use an external API to get the IP
       userAgent: navigator.userAgent,
@@ -12,6 +15,7 @@ export const RegisterVisit = async () => {
   
     // Store the visitor information
     await StoreVisitorInfo(visitorInfo);
+  }
   };
   
   // Example function to retrieve IP address (you can replace this with a real API)

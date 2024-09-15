@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import { Menu } from 'antd'
 import Sider from 'antd/es/layout/Sider'
 import React from 'react'

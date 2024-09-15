@@ -1,12 +1,14 @@
-'use client'
+"use client"
 import React from 'react';
 import { Form, Input, Button, InputRef } from 'antd';
 import moment from 'moment';
 import { PostDTO } from '@/types/common.dto';
 import { SinglePostImage, savePost } from '@/services/posts';
 import { useCommonStore } from '@/store/CommonStore';
-import ReactQuill from 'react-quill';
+import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+
 
 
 const CreatePosts = () => {

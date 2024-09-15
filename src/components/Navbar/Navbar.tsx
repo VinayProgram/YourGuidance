@@ -1,3 +1,4 @@
+"use client"
 import { useCommonStore } from "@/store/CommonStore";
 import { Button, Layout, theme } from "antd";
 import {

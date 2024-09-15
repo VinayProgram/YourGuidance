@@ -1,3 +1,4 @@
+"use client"
 import { POSTS_LIMIT, getAndDisplayPosts } from "@/services/posts";
 import { useCommonStore } from "@/store/CommonStore";
 

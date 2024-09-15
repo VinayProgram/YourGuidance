@@ -1,3 +1,4 @@
+"use client"
 import { Avatar, Button, Flex, theme } from "antd";
 import { Header } from "antd/es/layout/layout";
 import React from "react";
@@ -19,7 +20,7 @@ const NavbarUser = () => {
         />
         <span style={{ marginRight: "20px" }}>
           <Avatar src={user?.photoURL} />
-          <text style={{ marginInline: "2px" }}>{user?.displayName}</text>
+          <span style={{ marginInline: "2px" }}>{user?.displayName}</span>
         </span>
       </Flex>
     </Header>

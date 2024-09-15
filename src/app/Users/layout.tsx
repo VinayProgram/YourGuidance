@@ -2,7 +2,6 @@
 import React, { useEffect } from "react";
 import { Layout, Skeleton, theme } from "antd";
 import { useCommonStore } from "@/store/CommonStore";
-
 import SideBarUser from "./components/SideBar";
 import NavbarUser from "./components/Navbar";
 const { Content } = Layout;

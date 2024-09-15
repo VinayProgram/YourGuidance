@@ -1,3 +1,4 @@
+"use client"
 import { create } from "zustand";
 import { User } from "firebase/auth"; // Firebase Auth User type
 import { PostDTO } from "@/types/common.dto";
@@ -42,13 +43,17 @@ export const useCommonStore = create<Store>((set) => ({
   setUser: (user: User | null) => set({ user }), // Method to set user manually
 
   fetchUserProfile: () => {
-    auth.onAuthStateChanged((user) => {
+    if (typeof window !== "undefined") {
+    auth.onAuthStateChanged(async(user) => {
       if (user) {
+        const token=await user.getIdToken()
         set({ user: user });
+        document.cookie = `token=${token}; path=/;`;
       } else {
         set({ user: null });
       }
-    });
+    })
+    }
   },
 
   loader: { currentProgress: 0, max: 100, visibile: false, message: "" },
