@@ -1,6 +1,6 @@
 import { db, storage } from "@/config";
 import { PostDTO } from "@/types/common.dto";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { DocumentData, QueryDocumentSnapshot, addDoc, collection, getDocs, limit, orderBy, query, startAfter } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 export const savePost = async (post: PostDTO) => {
@@ -50,23 +50,45 @@ export const savePost = async (post: PostDTO) => {
   
 
 
-export const getAndDisplayPosts = async () => {
-  try {
-    const postsCollection = collection(db, "posts");
-    const querySnapshot = await getDocs(postsCollection);
-    const posts: PostDTO[] = querySnapshot.docs.map((doc) => {
-      const data = doc.data();
-      return {
-        title: data.title,
-        content: data.content,
-        author: data.author,
-        timestamp: data.timestamp.toDate(), // Convert Firestore timestamp to Date
-        tags: data.tags,
-        image:data.image
-      };
-    });
-    return posts
-  } catch (error) {
-    console.error("Error fetching posts: ", error);
-  }
-};
+  export const POSTS_LIMIT = 1; // Number of posts to fetch per batch
+
+  export const getAndDisplayPosts = async (lastVisible?: QueryDocumentSnapshot<DocumentData, DocumentData>|null) => {
+    try {
+      let postsQuery;  
+      if (lastVisible) {
+        postsQuery = query(
+          collection(db, "posts"),
+          orderBy("timestamp", "desc"), // Order posts by timestamp
+          startAfter(lastVisible), // Start after the last document from the previous batch
+          limit(POSTS_LIMIT) // Limit number of posts to fetch
+        );
+      } else {
+        postsQuery = query(
+          collection(db, "posts"),
+          orderBy("timestamp", "desc"),
+          limit(POSTS_LIMIT)
+        );
+      }
+  
+      const querySnapshot = await getDocs(postsQuery);
+      const posts: PostDTO[] = querySnapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          title: data.title,
+          content: data.content,
+          author: data.author,
+          timestamp: data.timestamp.toDate(),
+          tags: data.tags,
+          image: data.image,
+        };
+      });
+  
+      const lastVisibleDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
+      return { posts, lastVisibleDoc }; 
+    } catch (error) {
+      console.error("Error fetching posts: ", error);
+    }
+  };
+
+
+  

@@ -4,18 +4,13 @@ import { Layout } from "antd";
 import SideBar from "@/components/Navbar/SideBar";
 import Navbar from "@/components/Navbar/Navbar";
 import Posts from "@/components/Posts/Posts";
-import { RegisterVisit } from "@/helper/serviceHelper";
-import { getAndDisplayPosts } from "@/services/posts";
-import { useCommonStore } from "@/store/CommonStore";
-
+import PostsHook from "@/hooks/postsHook";
 
 const App: React.FC = () => {
-  const {setPosts}=useCommonStore()
-  React.useEffect(()=>{RegisterVisit(),getPosts()},[])
-  const getPosts=async()=>{
-    const posts=await getAndDisplayPosts();
-    posts&&setPosts(posts)    
-  }
+  const {fetchMorePosts}=PostsHook() 
+  React.useEffect(()=>{
+    fetchMorePosts()
+   },[])
   return (
     <Layout style={{ height: "100vh" }}>
       <SideBar />

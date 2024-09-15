@@ -1,36 +1,37 @@
+'use client'
 import React from 'react';
 import { Form, Input, Button, InputRef } from 'antd';
 import moment from 'moment';
 import { PostDTO } from '@/types/common.dto';
 import { SinglePostImage, savePost } from '@/services/posts';
+import { useCommonStore } from '@/store/CommonStore';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
-const { TextArea } = Input;
 
 const CreatePosts = () => {
   const [form] = Form.useForm();
   const imageRef = React.useRef<InputRef>(null);
-
+  const {user}=useCommonStore()
   const onSubmit = async (values: PostDTO) => {
     try {
       const file = imageRef.current?.input?.files?.[0];
       let imageUrl = '';
-      if (file) {
-        
+      if (file) {        
         const res = await SinglePostImage(file);
         imageUrl = res; 
-        console.log(res)
       }
 
-      const { title, content, author, tags } = values;
+      const { title, content, tags } = values;
       const newPost: PostDTO = {
         title,
         content,
-        author,
+        author:user?.displayName?user?.displayName:'',
         tags: typeof tags === 'string' ? tags.split(',') : tags,
         timestamp: new Date(),
         image:imageUrl,
       };
-
+      console.log(newPost)
       // Save the post
       await savePost(newPost);
 
@@ -70,15 +71,7 @@ const CreatePosts = () => {
           name="content"
           rules={[{ required: true, message: 'Please input the post content!' }]}
         >
-          <TextArea rows={4} placeholder="Enter post content" />
-        </Form.Item>
-
-        <Form.Item
-          label="Author"
-          name="author"
-          rules={[{ required: true, message: 'Please input the author!' }]}
-        >
-          <Input placeholder="Enter author name" />
+         <ReactQuill theme="snow"  />
         </Form.Item>
 
         <Form.Item

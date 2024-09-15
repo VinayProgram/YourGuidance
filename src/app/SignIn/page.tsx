@@ -4,12 +4,18 @@ import LoginForm from "./components/login";
 import "./login.css";
 import { Card } from "antd";
 import { useCommonStore } from "@/store/CommonStore";
+import { useRouter } from "next/navigation";
 
 const Login = () => {
-  const {fetchUserProfile}=useCommonStore()
-
+  const {fetchUserProfile,user}=useCommonStore()
+  const router=useRouter()
+  
   useEffect(() => {
     fetchUserProfile();
+    
+    if (user) {
+      router.push("/Users");
+    }
   }, [fetchUserProfile]);
  
 
@@ -17,7 +23,6 @@ const Login = () => {
     <main className="main">
       <Card title="login">
         <LoginForm />
-      
       </Card>
       
     </main>

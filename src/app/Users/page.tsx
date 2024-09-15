@@ -1,10 +1,9 @@
 'use client'
-import CreatePosts from "./components/Create.Posts";
 
 
 const LandingPage: React.FC = () => {
  return(
-  <CreatePosts/>
+  <h1>asd</h1>
  )
 };
 
