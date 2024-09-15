@@ -1,31 +1,41 @@
 import React from 'react';
-import { Form, Input, Button, Tag } from 'antd';
-import { collection, addDoc } from 'firebase/firestore'; // Firestore methods
+import { Form, Input, Button, InputRef } from 'antd';
 import moment from 'moment';
-import { db } from '@/config';
 import { PostDTO } from '@/types/common.dto';
+import { SinglePostImage, savePost } from '@/services/posts';
 
 const { TextArea } = Input;
 
 const CreatePosts = () => {
   const [form] = Form.useForm();
-  
-  // Method to submit post to Firestore
+  const imageRef = React.useRef<InputRef>(null);
+
   const onSubmit = async (values: PostDTO) => {
     try {
-      const { title, content, author, tags} = values;
-      const newPost = {
+      const file = imageRef.current?.input?.files?.[0];
+      let imageUrl = '';
+      if (file) {
+        
+        const res = await SinglePostImage(file);
+        imageUrl = res; 
+        console.log(res)
+      }
+
+      const { title, content, author, tags } = values;
+      const newPost: PostDTO = {
         title,
         content,
         author,
-        tags: typeof tags =='string'?tags.split(','):tags, // Convert comma-separated string to array
+        tags: typeof tags === 'string' ? tags.split(',') : tags,
         timestamp: new Date(),
+        image:imageUrl,
       };
 
-      // Insert post into Firestore
-      const docRef = await addDoc(collection(db, "posts"), newPost);
-      console.log("Document written with ID: ", docRef.id);
-      form.resetFields(); // Reset the form after submission
+      // Save the post
+      await savePost(newPost);
+
+      // Reset form fields
+      form.resetFields();
     } catch (error) {
       console.error("Error adding document: ", error);
     }
@@ -47,7 +57,14 @@ const CreatePosts = () => {
         >
           <Input placeholder="Enter post title" />
         </Form.Item>
-
+  
+        <Form.Item
+          label="Image"
+          name="image"
+        >
+          <Input type="file" ref={imageRef} />
+        </Form.Item>
+        
         <Form.Item
           label="Content"
           name="content"
@@ -71,8 +88,6 @@ const CreatePosts = () => {
         >
           <Input placeholder="Enter tags, separated by commas" />
         </Form.Item>
-        <Tag />
-
 
         <Form.Item>
           <Button type="primary" htmlType="submit">

@@ -4,6 +4,7 @@ import { Card, theme } from 'antd';
 import { useCommonStore } from '@/store/CommonStore';
 import moment from 'moment';
 import { PostDTO } from '@/types/common.dto';
+import Image from 'next/image';
 
 const Posts = () => {
   const {
@@ -23,12 +24,14 @@ const Posts = () => {
     >
        {posts.map((post:PostDTO, index:number) => (
          <>
+          
             <Card
             key={index}
               title={post.title}
               bordered={true}
               style={{ width: "100%" }}
             >
+              {post.image&&<Image src={post.image} height={500}  width={500} alt='image'/>}
               <p><strong>Author:</strong> {post.author}</p>
               <p><strong>Date:</strong> {moment(post.timestamp).format("MMMM Do YYYY, h:mm:ss a")}</p>
               <p><strong>Tags:</strong> {Array.isArray(post.tags)?post.tags.join(", "):post.tags}</p>

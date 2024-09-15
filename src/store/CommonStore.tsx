@@ -11,9 +11,19 @@ type Store = {
   setSidebar: (next: boolean) => void;
   count: number;
   inc: () => void;
-  user: User | null;  // Add the user to the store
-  fetchUserProfile: () => void;  // Add method to fetch the user profile
+  user: User | null; // Add the user to the store
+  fetchUserProfile: () => void; // Add method to fetch the user profile
   setUser: (user: User | null) => void; // Add method to set user manually
+  loader: {
+    visibile: boolean;
+    currentProgress: number;
+    max: number;
+    message?: string;
+  };
+  setLoader: (
+    next: keyof Store["loader"],
+    value: boolean | number | string
+  ) => void;
 };
 
 // Zustand store
@@ -24,17 +34,24 @@ export const useCommonStore = create<Store>((set) => ({
   setSidebar: (next: boolean) => set({ sidebarActive: next }),
   count: 1,
   inc: () => set((state) => ({ count: state.count + 1 })),
-  user: null, 
-  setUser: (user: User | null) => set({ user }),  // Method to set user manually
-  
+  user: null,
+  setUser: (user: User | null) => set({ user }), // Method to set user manually
+
   fetchUserProfile: () => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+   auth.onAuthStateChanged((user) => {
       if (user) {
-        set({ user });
+        set({ user:user });
       } else {
         set({ user: null });
       }
-    });
-    return () => unsubscribe();  // Clean up the listener
+    })
   },
+  loader: { currentProgress: 0, max: 100, visibile: false, message: "" },
+  setLoader: (key: keyof Store["loader"], value: boolean | number | string) =>
+    set((state) => ({
+      loader: {
+        ...state.loader, // Spread the existing loader state
+        [key]: value,    // Update only the specified key
+      },
+    })),
 }));

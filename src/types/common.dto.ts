@@ -13,5 +13,6 @@ export type PostDTO = {
   content: string;
   author: string;
   timestamp: Date|string;
-  tags: string|number[] |string;
+  tags: string[] |string;
+  image?:string
 };
