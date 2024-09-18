@@ -5,7 +5,7 @@ import { Skeleton } from "antd";
 const CreatePostPage = () => {
   return (
     <React.Suspense fallback={<Skeleton/>}>
-      <main >
+      <main style={{backgroundColor:'white',padding:'20px'}}>
         <CreatePosts/>
         </main>
     </React.Suspense>

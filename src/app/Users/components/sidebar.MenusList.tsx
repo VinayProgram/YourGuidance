@@ -3,7 +3,6 @@ import {
   UploadOutlined,
   UserOutlined,
   LogoutOutlined,
-  VideoCameraOutlined,
 } from "@ant-design/icons";
 import { MenuItemType } from "antd/es/menu/interface";
 import { useRouter } from "next/navigation";
@@ -14,17 +13,13 @@ export const MenuList=()=>{
       key: "1",
       icon: <UserOutlined />,
       label: "Profile",
-    },
-    {
-      key: "2",
-      icon: <VideoCameraOutlined />,
-      label: "Dashboard",
-      onClick:()=>route.push('/Users/CreatePosts')
+      onClick:()=>route.push('/Users/Profile')
     },
     {
       key: "3",
       icon: <UploadOutlined />,
       label: "CreatePosts",
+      onClick:()=>route.push('/Users/CreatePosts')
     },
     {
       key: "4",

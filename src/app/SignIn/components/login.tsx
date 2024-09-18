@@ -77,8 +77,8 @@ const LoginForm: React.FC = () => {
         <Button type="primary" htmlType="submit">
           Submit
         </Button>
-        <Button onClick={handleGoogleSignIn} icon={<LoginOutlined />}>
-          Sign In with Google
+        <Button  onClick={handleGoogleSignIn} icon={<LoginOutlined />}>
+          SignIn / Signup with Google 
         </Button>
       </Flex>
     </Form>

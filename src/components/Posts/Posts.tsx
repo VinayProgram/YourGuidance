@@ -9,8 +9,6 @@ import parse from 'html-react-parser';
 import PostsHook from '@/hooks/postsHook';
 import './posts.css'
 const Posts = () => {
- 
-
   const {posts}=useCommonStore()
   const {fetchMorePosts}=PostsHook()
   const {isPostAvailable}=useCommonStore()
