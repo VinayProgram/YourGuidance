@@ -7,7 +7,9 @@ const HomePage = () => {
    const{fetchMorePosts}= PostsHook()
    React.useEffect(()=>{fetchMorePosts()},[])
   return (
-    <div><Posts/></div>
+ 
+      <Posts/>
+   
   )
 }
 

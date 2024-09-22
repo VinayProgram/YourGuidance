@@ -2,6 +2,7 @@
     padding: 24px;
     height:100;
     overflow:auto;
+    background-color: '#f5f5f5';
 }
 
 .invisible-scrollbar::-webkit-scrollbar {

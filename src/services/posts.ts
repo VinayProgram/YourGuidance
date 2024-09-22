@@ -58,7 +58,7 @@ export const SinglePostImage = (image: File | null): Promise<string> => {
   });
 };
 
-export const POSTS_LIMIT = 20; // Number of posts to fetch per batch
+export const POSTS_LIMIT = 20   ; // Number of posts to fetch per batch
 
 export const getAndDisplayPosts = async (
   lastVisible?: QueryDocumentSnapshot<DocumentData, DocumentData> | null

@@ -9,22 +9,21 @@ const LayoutHead = ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  const {  fetchUserProfile } = useCommonStore();
+  const { fetchUserProfile } = useCommonStore();
   useEffect(() => {
     fetchUserProfile();
   }, [fetchUserProfile]);
 
   return (
-    <React.Suspense fallback={<Skeleton/>}>
-    <Layout style={{ height: "100vh" }}>
-      <SideBarUser/>
-      <Layout>
-        <NavbarUser/> 
-        
+    <React.Suspense fallback={<Skeleton />}>
+      <Layout style={{ height: "100vh" }}>
+        <SideBarUser />
+        <Layout>
+          <NavbarUser />
+
           {children}
-        
+        </Layout>
       </Layout>
-    </Layout>
     </React.Suspense>
   );
 };
