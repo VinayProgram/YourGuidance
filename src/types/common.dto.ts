@@ -8,11 +8,32 @@ export type VisitorDTO = {
   };
 
   // PostDTO - Type definition for a Post
-export type PostDTO = {
-  title: string;
-  content: string;
-  author: string;
-  timestamp: Date|string;
-  tags: string[] |string;
-  image?:string
-};
+  export type PostDTO = {
+    id: string;
+    title: string;
+    content: string;
+    author: string;
+    timestamp: Date;
+    tags: string[];
+    image?: string;
+    likes?:number
+    authorId:string
+    postId?:string,
+  };
+
+  export type LikeDTO={
+    liked:boolean,
+    byUser:string,
+    Postid:string,
+    authorId:string,
+    shared?:string
+  }
+
+  export type CommentDTO={
+    Commentlikes:number,
+    comment:string,
+    byUser:string,
+    Postid:string,
+    authorId:string,
+    shared?:string
+  }

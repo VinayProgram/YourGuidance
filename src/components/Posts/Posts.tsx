@@ -1,43 +1,73 @@
-  import React from "react";
-  import { Card } from "antd";
-  import { useCommonStore } from "@/store/CommonStore";
-  import moment from "moment";
-  import { PostDTO } from "@/types/common.dto";
-  import Image from "next/image";
-  import parse from "html-react-parser";
-  import PostsHook from "@/hooks/postsHook";
-  
-  import './posts.css'
-  const Posts = () => {
-    const { posts } = useCommonStore();
-    const { fetchMorePosts } = PostsHook();
-    const { isPostAvailable } = useCommonStore();
+'use client'
+import React from "react";
+import { Card, Divider, Flex } from "antd";
+import { useCommonStore } from "@/store/CommonStore";
+import moment from "moment";
+import { LikeDTO, PostDTO } from "@/types/common.dto";
+import Image from "next/image";
+import PostsHook from "@/hooks/postsHook";
+import "./posts.css";
+import { likePost } from "@/services/posts";
+import Link from "next/link";
+import {
+  HeartOutlined,
+  HeartFilled,
+} from '@ant-design/icons';
+const Posts = () => {
+  const { posts } = useCommonStore();
+  const { fetchMorePosts } = PostsHook();
+  const { isPostAvailable, user } = useCommonStore();
+  const [likeCheck,setLikeCheck]=React.useState<string[]>([])
+  const handleScroll = (
+    e: React.UIEvent<HTMLDivElement, globalThis.UIEvent>
+  ) => {
+    const scrollThreshold = 300;
+    const nearBottom =
+      Math.ceil(e.currentTarget.clientHeight + e.currentTarget.scrollTop) >=
+      e.currentTarget.scrollHeight - scrollThreshold;
 
-    const handleScroll = (
-      e: React.UIEvent<HTMLDivElement, globalThis.UIEvent>
-    ) => {
-      const scrollThreshold = 300;
-      const nearBottom =
-        Math.ceil(e.currentTarget.clientHeight + e.currentTarget.scrollTop) >=
-        e.currentTarget.scrollHeight - scrollThreshold;
-        
-      if (nearBottom&&isPostAvailable) {
-        console.log("i am iun",isPostAvailable);
-        fetchMorePosts();
-      }
+    if (nearBottom && isPostAvailable) {
+      console.log("i am iun", isPostAvailable);
+      fetchMorePosts();
+    }
+  };
+
+  const handleLikes = async (
+    id: PostDTO
+  ) => {
+    if(likeCheck.includes(id.postId+''))return false
+    const objLikeData: LikeDTO = {
+      authorId: id.authorId,
+      byUser: user?.uid + "",
+      liked: true,
+      Postid: id.postId + "",
+      shared: "false",
     };
+    likePost(objLikeData);
+    setLikeCheck((prev)=>[...prev,id.postId+''])
+  };
 
-    return (
-      <div className="invisible-scrollbar" onScroll={(e)=>handleScroll(e)}>
-        {posts.map((post: PostDTO, index: number) => (
+  const getLimitedContent = (htmlString: string) => {
+    // Split content by line breaks and tags
+    const lines = htmlString.split(/<\/?[^>]+>/).filter(Boolean);
+    const limitedLines = lines.slice(0, 40).join(" ");
+
+    return limitedLines;
+  };
+
+  
+
+  return (
+    <div className="invisible-scrollbar" onScroll={(e) => handleScroll(e)}>
+      {posts.map(async (post: PostDTO, index: number) => {
+     
+        return (
           <>
-        
             <Card
               key={index}
-              title={post.title}
               bordered={true}
-              style={{ width: "100%" ,margin:'1rem'}}
-              onDoubleClick={()=>alert('likeds')}
+              style={{ width: "100%" }}
+              onDoubleClick={() => handleLikes( post)}
             >
               {post.image && (
                 <Image src={post.image} height={500} width={500} alt="image" />
@@ -53,12 +83,25 @@
                 <strong>Tags:</strong>{" "}
                 {Array.isArray(post.tags) ? post.tags.join(", ") : post.tags}
               </p>
-              {parse(post.content)}
+              <Flex>
+              {likeCheck.includes(post.postId+'')?<HeartFilled style={{color:'red'}}/>:<HeartOutlined onClick={() => handleLikes(post)}/>}
+              {/* <p>{post.postId&& getLikesnumber(post.postId+'')}</p> */}
+              </Flex>
+              <Divider/>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: getLimitedContent(post.content),
+                }}
+                style={{ fontWeight: "bold" }}
+              />
+             
+              <Link style={{textAlign:'center',width:'100%',display:'block'}} href={"/home/" + post.id}>Read more</Link>
             </Card>
           </>
-        ))}
-      </div>
-    );
-  };
+        );
+      })}
+    </div>
+  );
+};
 
-  export default Posts;
+export default Posts;

@@ -3,16 +3,18 @@ import { Menu } from 'antd';
 import Sider from 'antd/es/layout/Sider';
 import React from 'react'
 import {
-   
-    UploadOutlined,
+    LikeFilled,
+    GroupOutlined,
     UserOutlined,
-    VideoCameraOutlined,
   } from '@ant-design/icons';
 import { useCommonStore } from '@/store/CommonStore';
+import { useRouter } from 'next/navigation';
 const SideBar = () => {
   const {sidebarActive}=useCommonStore()
+  const route=useRouter()
   return (
     <Sider
+    
     trigger={null} collapsible collapsed={sidebarActive}
     breakpoint="lg"
     collapsedWidth="0"
@@ -32,17 +34,18 @@ const SideBar = () => {
             {
               key: '1',
               icon: <UserOutlined />,
-              label: 'nav 1',
+              label: 'SignIn',
+              onClick:()=>route.push('/SignIn')
             },
             {
               key: '2',
-              icon: <VideoCameraOutlined />,
-              label: 'nav 2',
+              icon: <GroupOutlined/>,
+              label: 'Peoples',
             },
             {
               key: '3',
-              icon: <UploadOutlined />,
-              label: 'nav 3',
+              icon: <LikeFilled/>,
+              label: 'Most Liked Posts',
             },
           ]}
         />

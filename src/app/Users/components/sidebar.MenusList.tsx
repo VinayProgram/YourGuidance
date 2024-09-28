@@ -1,5 +1,6 @@
 "use client"
 import {
+  HomeOutlined,
   UploadOutlined,
   UserOutlined,
   LogoutOutlined,
@@ -9,6 +10,12 @@ import { useRouter } from "next/navigation";
 export const MenuList=()=>{
   const route=useRouter()
   const menuList:MenuItemType[]=[
+    {
+      key: "31",
+      icon: <HomeOutlined />,
+      label: "Home",
+      onClick:()=>route.push('/Users')
+    },
     {
       key: "1",
       icon: <UserOutlined />,

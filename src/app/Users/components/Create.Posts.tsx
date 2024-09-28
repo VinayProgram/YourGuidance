@@ -13,6 +13,7 @@ const CreatePosts = () => {
   const [form] = Form.useForm();
   const imageRef = React.useRef<InputRef>(null);
   const { user } = useCommonStore();
+
   const onSubmit = async (values: PostDTO) => {
     try {
       const file = imageRef.current?.input?.files?.[0];
@@ -23,13 +24,17 @@ const CreatePosts = () => {
       }
 
       const { title, content, tags } = values;
+      const stringtags=tags+''
       const newPost: PostDTO = {
+        id:crypto.randomUUID(),
         title,
         content,
         author: user?.displayName ? user?.displayName : "",
-        tags: typeof tags === "string" ? tags.split(",") : tags,
+        tags: typeof tags === "string" ? stringtags?.split(",") : tags,
         timestamp: new Date(),
         image: imageUrl,
+        likes:0,
+        authorId:user?.uid+''
       };
       console.log(newPost);
       // Save the post

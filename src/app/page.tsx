@@ -1,12 +1,12 @@
 "use client"
 import React from "react";
+import HomePage from "./home/page";
+import LayoutHome from "./home/layout";
 const App: React.FC = () => {
-  React.useEffect(()=>{
-window.location.href='/home'
-  },[])
+
   return (
-   <React.Suspense>
-    <h1>Upcomming</h1>
+    <React.Suspense>
+    <LayoutHome><HomePage/></LayoutHome>
     </React.Suspense>
   );
 };

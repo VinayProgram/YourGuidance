@@ -16,7 +16,7 @@ const Login = () => {
     if (user) {
       router.push("/Users");
     }
-  }, [fetchUserProfile]);
+  }, [fetchUserProfile, router, user]);
  
 
   return (
