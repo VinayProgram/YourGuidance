@@ -1,13 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ReadFullPost from "@/components/Posts/readFullPost";
 import { Spin } from "antd";
-import { GetServerSidePropsContext } from "next";
 import React from "react";
 
-const FullPagePost = (context: GetServerSidePropsContext) => {
-  const { id } = context.params as { id: string };
+const FullPagePost = (context: { params: any; }) => {
+  const  id  = context.params
   return (
     <React.Suspense fallback={<Spin size="small" />}>
-      {id && <ReadFullPost id={id + ""} />}
+      {id?.id && <ReadFullPost id={id.id+''} />}
     </React.Suspense>
   );
 };
