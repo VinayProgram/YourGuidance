@@ -22,24 +22,20 @@ const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
 
 const LoginForm: React.FC = () => {
   const router = useRouter();
-  const [token, setToken] = React.useState("");
-  React.useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        router.push("/Users");
-      }
-    });
-    return () => unsubscribe();
-  }, [token]);
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      router.push("/Users");
+    }
+  });
 
   const handleGoogleSignIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      if (typeof window !== "undefined") {
       const result = await signInWithPopup(auth, provider);
       const token = await result.user.getIdToken();
-      setToken(token);
-      document.cookie = `token=${token}; path=/;`;
+      if(token){
+        router.push("/Users");
+        document.cookie = `token=${token}; path=/;`;
       }
     } catch (error) {
       console.error("Google Sign-In Error:", error);

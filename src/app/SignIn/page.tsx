@@ -1,23 +1,20 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import LoginForm from "./components/login";
 import "./login.css";
 import { Card } from "antd";
-import { useCommonStore } from "@/store/CommonStore";
 import { useRouter } from "next/navigation";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/config";
 
 const Login = () => {
-  const {fetchUserProfile,user}=useCommonStore()
   const router=useRouter()
-  
-  useEffect(() => {
-    fetchUserProfile();
-    
+  onAuthStateChanged(auth, (user) => {
     if (user) {
       router.push("/Users");
     }
-  }, [fetchUserProfile, router, user]);
- 
+  });
+
 
   return (
     <main className="main">

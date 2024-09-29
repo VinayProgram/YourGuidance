@@ -1,18 +1,15 @@
-'use client'
-import ReadFullPost from '@/components/Posts/readFullPost'
-import { Spin } from 'antd'
-import { useParams } from 'next/navigation'
-import React from 'react'
+import ReadFullPost from "@/components/Posts/readFullPost";
+import { Spin } from "antd";
+import { GetServerSidePropsContext } from "next";
+import React from "react";
 
-const FullPagePost = () => {
-    const id=useParams()
-
-return (
+const FullPagePost = (context: GetServerSidePropsContext) => {
+  const { id } = context.params as { id: string };
+  return (
     <React.Suspense fallback={<Spin size="small" />}>
-        
-   {id.id && <ReadFullPost id={id.id+''}/>}
-   </React.Suspense>
-  )
-}
+      {id && <ReadFullPost id={id + ""} />}
+    </React.Suspense>
+  );
+};
 
-export default FullPagePost
+export default FullPagePost;
