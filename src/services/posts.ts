@@ -64,17 +64,21 @@ export const SinglePostImage = (image: File | null): Promise<string> => {
 
 export const POSTS_LIMIT = 20; // Number of posts to fetch per batch
 
+
+
 export const getAndDisplayPosts = async (
-  lastVisible?: QueryDocumentSnapshot<DocumentData, DocumentData> | null
+  lastVisible?: QueryDocumentSnapshot<DocumentData> | null
 ) => {
   try {
     let postsQuery;
+
+    // Build the query to fetch posts
     if (lastVisible) {
       postsQuery = query(
         collection(db, "posts"),
         orderBy("timestamp", "desc"), // Order posts by timestamp
         startAfter(lastVisible), // Start after the last document from the previous batch
-        limit(POSTS_LIMIT) // Limit number of posts to fetch
+        limit(POSTS_LIMIT) // Limit the number of posts to fetch
       );
     } else {
       postsQuery = query(
@@ -84,29 +88,43 @@ export const getAndDisplayPosts = async (
       );
     }
 
+    // Get the post documents
     const querySnapshot = await getDocs(postsQuery);
-    const posts = querySnapshot.docs.map((doc) => {
-      const data = doc.data();
-      return {
-        postId:doc.id,
-        id: data.id,
-        title: data.title,        
-        content: data.content,
-        author: data.author,
-        timestamp: data.timestamp.toDate(),
-        tags: data.tags,
-        image: data.image,
-        likes:data.likes,
-        authorId:data.authorId
-      };
-    });
 
+    // Fetch posts and their like counts
+    const posts = await Promise.all(
+      querySnapshot.docs.map(async (doc) => {
+        const data = doc.data();
+
+        // Query the likes subcollection to get the number of likes
+        const likesSnapshot = await getDocs(collection(db, "posts", doc.id, "likes"));
+        const likeCount = likesSnapshot.size; // Get the number of likes
+
+        return {
+          postId: doc.id,   // Unique post ID
+          id: data.id,
+          title: data.title,        
+          content: data.content,
+          author: data.author,
+          timestamp: data.timestamp.toDate(),
+          tags: data.tags,
+          image: data.image,
+          likes: likeCount, // Return the number of likes
+          authorId: data.authorId
+        };
+      })
+    );
+
+    // Get the last visible document for pagination
     const lastVisibleDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
+
     return { posts, lastVisibleDoc };
   } catch (error) {
     console.error("Error fetching posts: ", error);
+    return { posts: [], lastVisibleDoc: null };
   }
 };
+
 
 
 
@@ -189,17 +207,21 @@ export const getLikesForPost = async (postId: string) => {
 
 
 export const addComment = async (commentDTO: CommentDTO) => {
-  const { comment, byUser, Postid, authorId } = commentDTO;
-
+  const { comment, byUser, Postid,userName } = commentDTO;
   try {
-    const newCommentRef = doc(collection(db, `posts/${Postid}/comments`));
-    await setDoc(newCommentRef, {
+    // Create a reference to the comments collection inside the post document
+    const commentsCollectionRef = collection(db, `posts/${Postid}/comments`);
+
+    // Add a new document with auto-generated ID
+    await addDoc(commentsCollectionRef, {
       comment,
-      Commentlikes: 0,
+      Commentlikes: 0, // Default likes to 0
       byUser,
       Postid,
-      authorId
+      userName,
+      timestamp: new Date() // Add timestamp for when the comment was created
     });
+
     console.log(`Comment added by ${byUser} on post ${Postid}`);
   } catch (error) {
     console.error("Error adding comment: ", error);
@@ -207,12 +229,28 @@ export const addComment = async (commentDTO: CommentDTO) => {
   }
 };
 
-export const getCommentsForPost = async (postId: string) => {
+
+export const getCommentsForPost = async (postId: string): Promise<CommentDTO[]> => {
   try {
     const commentsQuery = query(collection(db, `posts/${postId}/comments`));
     const querySnapshot = await getDocs(commentsQuery);
 
-    const comments = querySnapshot.docs.map(doc => doc.data());
+    const comments: CommentDTO[] = querySnapshot.docs.map((doc) => {
+      const data = doc.data();
+
+      return {
+        comment: data.comment,
+        Commentlikes: data.Commentlikes || 0,
+        byUser: data.byUser,
+        Postid: data.Postid,
+        authorId: data.authorId,
+        userName:data.userName,
+        shared: data.shared || false, // If shared is optional, default to false
+        // You could also add a timestamp if needed:
+        // timestamp: data.timestamp ? data.timestamp.toDate() : new Date(),
+      };
+    });
+
     return comments;
   } catch (error) {
     console.error("Error fetching comments: ", error);

@@ -1,6 +1,6 @@
 'use client';
 import React from "react";
-import { Card, Divider, Flex } from "antd";
+import { Card, Divider, Flex, notification } from "antd";
 import { useCommonStore } from "@/store/CommonStore";
 import moment from "moment";
 import { LikeDTO, PostDTO } from "@/types/common.dto";
@@ -9,12 +9,12 @@ import PostsHook from "@/hooks/postsHook";
 import "./posts.css";
 import { likePost } from "@/services/posts";
 import Link from "next/link";
-import { HeartOutlined, HeartFilled } from "@ant-design/icons";
+import { HeartOutlined, HeartFilled ,CommentOutlined} from "@ant-design/icons";
 
 const Posts: React.FC = () => {
   const { posts } = useCommonStore();
   const { fetchMorePosts } = PostsHook();
-  const { isPostAvailable, user } = useCommonStore();
+  const { isPostAvailable, user,setCommentsActive,commentsActive,setPostId } = useCommonStore();
   const [likeCheck, setLikeCheck] = React.useState<string[]>([]);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement, globalThis.UIEvent>) => {
@@ -28,8 +28,15 @@ const Posts: React.FC = () => {
       fetchMorePosts();
     }
   };
-
+  const openNotification = (message:string,description:string) => {
+    notification.open({
+      message: message,
+      description: description,
+    });
+  };
+  
   const handleLikes = async (post: PostDTO) => {
+    if(!user?.uid)return openNotification('Login Required',"Please login to like or comment")
     if (likeCheck.includes(post.postId + "")) return false;
     const objLikeData: LikeDTO = {
       authorId: post.authorId,
@@ -47,7 +54,6 @@ const Posts: React.FC = () => {
     const limitedLines = lines.slice(0, 40).join(" ");
     return limitedLines;
   };
-
   return (
     <div className="invisible-scrollbar" onScroll={(e) => handleScroll(e)}>
       {posts.map((post: PostDTO) => (
@@ -71,12 +77,15 @@ const Posts: React.FC = () => {
             <strong>Tags:</strong>{" "}
             {Array.isArray(post.tags) ? post.tags.join(", ") : post.tags}
           </p>
-          <Flex>
+          <Flex gap={7} style={{marginTop:'2px'}}>
             {likeCheck.includes(post.postId + "") ? (
-              <HeartFilled style={{ color: "red" }} />
+              <HeartFilled style={{ color: "red" }} label={post?.likes+''}/>
             ) : (
-              <HeartOutlined onClick={() => handleLikes(post)} />
+              <HeartOutlined onClick={() => handleLikes(post)} label={post?.likes+''}/>
             )}
+            {post?.likes+''}
+              <CommentOutlined onClick={()=>{setCommentsActive(!commentsActive); setPostId(post.postId+'')}}/>
+            
           </Flex>
           <Divider />
           <div

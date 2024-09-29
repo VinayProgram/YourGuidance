@@ -30,10 +30,10 @@ export type VisitorDTO = {
   }
 
   export type CommentDTO={
-    Commentlikes:number,
+    Commentlikes?:number,
     comment:string,
     byUser:string,
     Postid:string,
-    authorId:string,
     shared?:string
+    userName?:string,
   }

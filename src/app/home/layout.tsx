@@ -1,8 +1,9 @@
-'use client'
+
 import React from 'react'
 import { Layout } from "antd";
 import SideBar from "@/components/Navbar/SideBar";
 import Navbar from "@/components/Navbar/Navbar";
+import Comments from '@/components/Posts/comments';
 
 const LayoutHome = ({
     children,
@@ -18,6 +19,7 @@ const LayoutHome = ({
         <Navbar />
         {children}
       </Layout>
+      <Comments/>
     </Layout>
     </>
   )

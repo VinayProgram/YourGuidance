@@ -4,6 +4,7 @@ import { Layout, Skeleton } from "antd";
 import { useCommonStore } from "@/store/CommonStore";
 import SideBarUser from "./components/SideBar";
 import NavbarUser from "./components/Navbar";
+import Comments from "@/components/Posts/comments";
 const LayoutHead = ({
   children,
 }: Readonly<{
@@ -23,6 +24,7 @@ const LayoutHead = ({
 
           {children}
         </Layout>
+        <Comments/>
       </Layout>
     </React.Suspense>
   );

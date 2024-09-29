@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { create } from "zustand";
 import { User } from "firebase/auth"; // Firebase Auth User type
 import { PostDTO } from "@/types/common.dto";
@@ -24,11 +24,19 @@ type Store = {
     next: keyof Store["loader"],
     value: boolean | number | string
   ) => void;
-  isPostAvailable:boolean,
-  setIsPostAvailable:(next:boolean)=>void
+  isPostAvailable: boolean;
+  setIsPostAvailable: (next: boolean) => void;
 
-  lastVisible:QueryDocumentSnapshot<DocumentData, DocumentData>|null
-  setLastVisible:(next:QueryDocumentSnapshot<DocumentData, DocumentData>)=>void
+  lastVisible: QueryDocumentSnapshot<DocumentData, DocumentData> | null;
+  setLastVisible: (
+    next: QueryDocumentSnapshot<DocumentData, DocumentData>
+  ) => void;
+
+  commentsActive: boolean;
+  setCommentsActive: (next: boolean) => void;
+
+  postId: null|string,
+  setPostId: (next: string) => void,
 };
 
 // Zustand store
@@ -39,20 +47,26 @@ export const useCommonStore = create<Store>((set) => ({
   sidebarActive: true,
   setSidebar: (next: boolean) => set({ sidebarActive: next }),
 
+  commentsActive: true,
+  setCommentsActive: (next: boolean) => set({ commentsActive: next }),
+
+  postId: null,
+  setPostId: (next: string) => set({ postId: next }),
+
   user: null,
   setUser: (user: User | null) => set({ user }), // Method to set user manually
 
   fetchUserProfile: () => {
     if (typeof window !== "undefined") {
-    auth.onAuthStateChanged(async(user) => {
-      if (user) {
-        const token=await user.getIdToken()
-        set({ user: user });
-        document.cookie = `token=${token}; path=/;`;
-      } else {
-        set({ user: null });
-      }
-    })
+      auth.onAuthStateChanged(async (user) => {
+        if (user) {
+          const token = await user.getIdToken();
+          set({ user: user });
+          document.cookie = `token=${token}; path=/;`;
+        } else {
+          set({ user: null });
+        }
+      });
     }
   },
 
@@ -64,8 +78,9 @@ export const useCommonStore = create<Store>((set) => ({
         [key]: value, // Update only the specified key
       },
     })),
-  isPostAvailable:true,
-  setIsPostAvailable:(next:boolean)=>set({isPostAvailable:next}),
-  lastVisible:null,
-  setLastVisible:(next:QueryDocumentSnapshot<DocumentData, DocumentData>)=>set({lastVisible:next})
+  isPostAvailable: true,
+  setIsPostAvailable: (next: boolean) => set({ isPostAvailable: next }),
+  lastVisible: null,
+  setLastVisible: (next: QueryDocumentSnapshot<DocumentData, DocumentData>) =>
+    set({ lastVisible: next }),
 }));
