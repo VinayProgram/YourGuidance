@@ -1,11 +1,12 @@
 "use client"
 import React from "react";
 import type { FormProps } from "antd";
-import { Button, Flex, Form, Input } from "antd";
+import { Button,  Form, } from "antd";
 import { onAuthStateChanged, signInWithPopup } from "firebase/auth";
 import { auth, provider } from "@/config";
-import { LoginOutlined } from "@ant-design/icons";
+import { GoogleOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
+
 type FieldType = {
   username?: string;
   password?: string;
@@ -25,6 +26,7 @@ const LoginForm: React.FC = () => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       router.push("/Users");
+              window.location.href='/Users'
     }
   });
 
@@ -33,7 +35,9 @@ const LoginForm: React.FC = () => {
     try {
       const result = await signInWithPopup(auth, provider);
       const token = await result.user.getIdToken();
-      if(token){
+
+      if(result){
+        window.location.href='/Users'
         router.push("/Users");
         document.cookie = `token=${token}; path=/;`;
       }
@@ -53,30 +57,9 @@ const LoginForm: React.FC = () => {
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
-      <Form.Item<FieldType>
-        label="Username"
-        name="username"
-        rules={[{ required: true, message: "Please input your username!" }]}
-      >
-        <Input />
-      </Form.Item>
-
-      <Form.Item<FieldType>
-        label="Password"
-        name="password"
-        rules={[{ required: true, message: "Please input your password!" }]}
-      >
-        <Input.Password />
-      </Form.Item>
-
-      <Flex justify="space-around">
-        <Button type="primary" htmlType="submit">
-          Submit
-        </Button>
-        <Button  onClick={handleGoogleSignIn} icon={<LoginOutlined />}>
+        <Button  onClick={handleGoogleSignIn} icon={<GoogleOutlined />}>
           SignIn / Signup with Google 
         </Button>
-      </Flex>
     </Form>
   );
 };

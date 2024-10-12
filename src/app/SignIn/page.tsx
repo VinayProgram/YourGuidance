@@ -17,7 +17,7 @@ const Login = () => {
 
 
   return (
-    <main className="main">
+    <main className="main" >
       <Card title="login">
         <LoginForm />
       </Card>

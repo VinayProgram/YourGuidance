@@ -5,6 +5,7 @@ import {
   UserOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
+import { PostAddOutlined } from "@mui/icons-material";
 import { MenuItemType } from "antd/es/menu/interface";
 import { useRouter } from "next/navigation";
 export const MenuList=()=>{
@@ -21,6 +22,12 @@ export const MenuList=()=>{
       icon: <UserOutlined />,
       label: "Profile",
       onClick:()=>route.push('/Users/Profile')
+    },
+    {
+      key: "317",
+      icon: <PostAddOutlined />,
+      label: "My Posts",
+      onClick:()=>route.push('/Users/MyPosts'),
     },
     {
       key: "3",

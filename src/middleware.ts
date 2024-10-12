@@ -8,7 +8,7 @@ export function middleware(req: NextRequest) {
   // If the user is not authenticated and is trying to access a protected route
   if (protectedRoutes.some((route) => pathname.startsWith(route))) {
     const token = req.cookies.get("token");
-    console.log(token)
+    // console.log(token)
     if (!token) {
       // Redirect the user to the login page if not authenticated
       const loginUrl = new URL("/SignIn", req.url);

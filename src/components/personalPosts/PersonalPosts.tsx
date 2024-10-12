@@ -5,18 +5,18 @@ import { useCommonStore } from "@/store/CommonStore";
 import moment from "moment";
 import { LikeDTO, PostDTO } from "@/types/common.dto";
 import Image from "next/image";
-import {PostsHook} from "@/hooks/postsHook";
-import "./posts.css";
+import {PostsHookPersonal} from "@/hooks/postsHook";
+import "../Posts/posts.css";
 import { likePost } from "@/services/posts";
 import Link from "next/link";
 import { HeartOutlined, HeartFilled ,CommentOutlined} from "@ant-design/icons";
 
 const Posts: React.FC = () => {
-  const { posts } = useCommonStore();
-  const { fetchMorePosts } = PostsHook();
+  const { personalPosts } = useCommonStore();
+  const { fetchMorePosts } = PostsHookPersonal();
   const { isPostAvailable, user,setCommentsActive,commentsActive,setPostId } = useCommonStore();
   const [likeCheck, setLikeCheck] = React.useState<string[]>([]);
-
+    console.log(personalPosts)
   const handleScroll = (e: React.UIEvent<HTMLDivElement, globalThis.UIEvent>) => {
     e.stopPropagation();
     const scrollThreshold = 300;
@@ -56,7 +56,7 @@ const Posts: React.FC = () => {
   };
   return (
     <div className="invisible-scrollbar" onScroll={(e) => handleScroll(e)}>
-      {posts.map((post: PostDTO) => (
+      {personalPosts.map((post: PostDTO) => (
         <Card
           key={post.postId} // Use unique postId as the key
           bordered={true}

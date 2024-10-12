@@ -8,9 +8,9 @@ const { Meta } = Card;
 const Profile = () => {
   const {  user } = useCommonStore();
   return (
-    <main style={{width:'100%',justifyContent:'center',display:'flex'}}>
+    <main style={{width:'100%',justifyContent:'center',display:'flex',alignItems:'center',height:"100vh"}}>
   <Card
-    style={{ width: 300 }}
+    style={{ width: 300 ,height:200}}
     cover={
       // eslint-disable-next-line @next/next/no-img-element
       <img

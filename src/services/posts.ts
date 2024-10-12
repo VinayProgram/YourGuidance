@@ -125,7 +125,65 @@ export const getAndDisplayPosts = async (
   }
 };
 
+export const getAndDisplayPersonalPosts = async (
+  lastVisible?: QueryDocumentSnapshot<DocumentData> | null,
+  authorId?: string,
+) => {
+  try {
+    let postsQuery;
 
+    if (lastVisible && authorId) {
+      postsQuery = query(
+        collection(db, "posts"),
+        where("authorId", "==", authorId),
+        orderBy("timestamp", "desc"),
+        startAfter(lastVisible),
+        limit(POSTS_LIMIT)
+      );
+    } else if (authorId) {
+      postsQuery = query(
+        collection(db, "posts"),
+        where("authorId", "==", authorId),
+        orderBy("timestamp", "desc"),
+        limit(POSTS_LIMIT)
+      );
+    } else {
+      // Handle case where authorId is not provided
+      console.error("Author ID is required to fetch posts.");
+      return { posts: [], lastVisibleDoc: null };
+    }
+    const querySnapshot = await getDocs(postsQuery);
+    const posts = await Promise.all(
+      querySnapshot.docs.map(async (doc) => {
+        const data = doc.data();
+
+        // Optionally, optimize like count retrieval
+        const likesSnapshot = await getDocs(collection(db, "posts", doc.id, "likes"));
+        const likeCount = likesSnapshot.size;
+
+        return {
+          postId: doc.id,
+          id: data.id,
+          title: data.title,
+          content: data.content,
+          author: data.author,
+          timestamp: data.timestamp.toDate(),
+          tags: data.tags,
+          image: data.image,
+          likes: likeCount,
+          authorId: data.authorId,
+        };
+      })
+    );
+
+    const lastVisibleDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+    return { posts, lastVisibleDoc };
+  } catch (error) {
+    console.error("Error fetching posts: ", error);
+    return { posts: [], lastVisibleDoc: null };
+  }
+};
 
 
 export const getPostById = async (postId: string) => {

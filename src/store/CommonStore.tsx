@@ -9,6 +9,9 @@ import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
 type Store = {
   posts: PostDTO[];
   setPosts: (next: PostDTO[]) => void;
+
+  personalPosts: PostDTO[];
+  setPersonalPosts: (next: PostDTO[]) => void;
   sidebarActive: boolean;
   setSidebar: (next: boolean) => void;
   user: User | null; // Add the user to the store
@@ -43,6 +46,9 @@ type Store = {
 export const useCommonStore = create<Store>((set) => ({
   posts: [],
   setPosts: (next: PostDTO[]) => set({ posts: next }),
+
+  personalPosts: [],
+  setPersonalPosts: (next: PostDTO[]) => set({ posts: next }),
 
   sidebarActive: true,
   setSidebar: (next: boolean) => set({ sidebarActive: next }),

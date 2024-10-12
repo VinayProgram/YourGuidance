@@ -1,6 +1,6 @@
 "use client";
 import Posts from "@/components/Posts/Posts";
-import PostsHook from "@/hooks/postsHook";
+import {PostsHook} from "@/hooks/postsHook";
 import { Spin } from "antd";
 import React from "react";
 
