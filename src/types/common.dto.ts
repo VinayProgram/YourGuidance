@@ -37,3 +37,14 @@ export type VisitorDTO = {
     shared?:string
     userName?:string,
   }
+
+  export type profileDTO={
+    id?:string,
+    uid: string,
+    email: string,
+    displayName: string,
+    photoURL: string, 
+    public:boolean
+  }
+  
+  

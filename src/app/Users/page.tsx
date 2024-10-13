@@ -1,5 +1,4 @@
 "use client"
-
 import Posts from "@/components/Posts/Posts";
 import {PostsHook} from "@/hooks/postsHook";
 import { Skeleton } from "antd";

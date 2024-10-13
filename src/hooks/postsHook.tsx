@@ -1,5 +1,5 @@
 "use client"
-import { POSTS_LIMIT, getAndDisplayPosts,getAndDisplayPersonalPosts } from "@/services/posts";
+import { POSTS_LIMIT, getAndDisplayPosts } from "@/services/posts";
 import { useCommonStore } from "@/store/CommonStore";
 
 
@@ -22,23 +22,5 @@ const PostsHook = () => {
       return {fetchMorePosts}
 }
 
-const PostsHookPersonal = () => {
-   
-  const { user,setPersonalPosts,personalPosts,loader,setLoader,setIsPostAvailable,lastVisible,setLastVisible } = useCommonStore();
-    const fetchMorePosts = async () => {
-        if (loader.visibile) return; 
-        setLoader('visibile',true)
-        console.log(user)
-        const postsData = await getAndDisplayPersonalPosts(lastVisible,user?.uid+"");
-        if (postsData?.posts&&postsData?.posts.length < POSTS_LIMIT) {
-          setIsPostAvailable(false); 
-        }
-        const postDatacheck=postsData?.posts?postsData?.posts:[]
-        setPersonalPosts( [...personalPosts,...postDatacheck]);
-        if(postsData?.lastVisibleDoc)setLastVisible(postsData?.lastVisibleDoc)
-        
-        setLoader('visibile',false)
-      };
-      return {fetchMorePosts}
-}
-export {PostsHook,PostsHookPersonal}
+
+export {PostsHook}

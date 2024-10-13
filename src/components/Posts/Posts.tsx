@@ -1,6 +1,6 @@
 'use client';
 import React from "react";
-import { Card, Divider, Flex, notification } from "antd";
+import { Card, Divider, Flex, Input, notification } from "antd";
 import { useCommonStore } from "@/store/CommonStore";
 import moment from "moment";
 import { LikeDTO, PostDTO } from "@/types/common.dto";
@@ -10,7 +10,7 @@ import "./posts.css";
 import { likePost } from "@/services/posts";
 import Link from "next/link";
 import { HeartOutlined, HeartFilled ,CommentOutlined} from "@ant-design/icons";
-
+const { Search } = Input;
 const Posts: React.FC = () => {
   const { posts } = useCommonStore();
   const { fetchMorePosts } = PostsHook();
@@ -56,6 +56,13 @@ const Posts: React.FC = () => {
   };
   return (
     <div className="invisible-scrollbar" onScroll={(e) => handleScroll(e)}>
+       <Search
+        placeholder="Search by display posts"
+        enterButton="Search"
+        size="large"
+        onSearch={()=>""}
+        style={{ marginBottom: "20px" }}
+      />
       {posts.map((post: PostDTO) => (
         <Card
           key={post.postId} // Use unique postId as the key

@@ -6,6 +6,7 @@ import {
     LikeFilled,
     GroupOutlined,
     UserOutlined,
+    HomeOutlined,
   } from '@ant-design/icons';
 import { useCommonStore } from '@/store/CommonStore';
 import { useRouter } from 'next/navigation';
@@ -32,7 +33,18 @@ const SideBar = () => {
           defaultSelectedKeys={['1']}
           items={[
             {
+              key: 'logo',
+              icon: <h1 style={{color:'white'}}><b>Your</b>-<i style={{color:'yellow'}}>Guidance</i></h1>,
+              onClick:()=>route.push('/home')
+            },
+            {
               key: '1',
+              icon: <HomeOutlined />,
+              label: 'home',
+              onClick:()=>route.push('/home')
+            },
+            {
+              key: '10',
               icon: <UserOutlined />,
               label: 'SignIn',
               onClick:()=>route.push('/SignIn')
@@ -41,6 +53,7 @@ const SideBar = () => {
               key: '2',
               icon: <GroupOutlined/>,
               label: 'Peoples',
+              onClick:()=>route.push('/home/Peoples')
             },
             {
               key: '3',

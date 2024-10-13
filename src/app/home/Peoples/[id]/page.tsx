@@ -5,11 +5,11 @@ import React from "react";
 
 
 
-const MyPersonalPosts = () => {
+const MyPublicPosts = () => {
 
 return(
 <React.Suspense fallback={<Skeleton/>}> <Posts/></React.Suspense>
 )
 }
 
-export default MyPersonalPosts
+export default MyPublicPosts

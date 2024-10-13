@@ -1,67 +1,39 @@
 'use client';
 import React from "react";
-import { Card, Divider, Flex, notification } from "antd";
+import { Card, Divider } from "antd";
 import { useCommonStore } from "@/store/CommonStore";
 import moment from "moment";
-import { LikeDTO, PostDTO } from "@/types/common.dto";
+import { PostDTO } from "@/types/common.dto";
 import Image from "next/image";
-import {PostsHookPersonal} from "@/hooks/postsHook";
 import "../Posts/posts.css";
-import { likePost } from "@/services/posts";
+import { getAndDisplayPersonalPosts } from "@/services/posts";
 import Link from "next/link";
-import { HeartOutlined, HeartFilled ,CommentOutlined} from "@ant-design/icons";
+import { useParams } from "next/navigation";
 
 const Posts: React.FC = () => {
-  const { personalPosts } = useCommonStore();
-  const { fetchMorePosts } = PostsHookPersonal();
-  const { isPostAvailable, user,setCommentsActive,commentsActive,setPostId } = useCommonStore();
-  const [likeCheck, setLikeCheck] = React.useState<string[]>([]);
-    console.log(personalPosts)
-  const handleScroll = (e: React.UIEvent<HTMLDivElement, globalThis.UIEvent>) => {
-    e.stopPropagation();
-    const scrollThreshold = 300;
-    const nearBottom =
-      Math.ceil(e.currentTarget.clientHeight + e.currentTarget.scrollTop) >=
-      e.currentTarget.scrollHeight - scrollThreshold;
-
-    if (nearBottom && isPostAvailable) {
-      fetchMorePosts();
-    }
-  };
-  const openNotification = (message:string,description:string) => {
-    notification.open({
-      message: message,
-      description: description,
-    });
-  };
+  const { user} = useCommonStore();
+  const params=useParams()
+  const [data,setData]=React.useState<PostDTO[]>()
+  React.useEffect(()=>{getData()},[])
+  const getData=async()=>{
+    const postsData = await getAndDisplayPersonalPosts(user?.uid?user.uid:params.id+'');
+    setData(postsData.posts)
+    console.log(postsData)
+  }
   
-  const handleLikes = async (post: PostDTO) => {
-    if(!user?.uid)return openNotification('Login Required',"Please login to like or comment")
-    if (likeCheck.includes(post.postId + "")) return false;
-    const objLikeData: LikeDTO = {
-      authorId: post.authorId,
-      byUser: user?.uid + "",
-      liked: true,
-      Postid: post.postId + "",
-      shared: "false",
-    };
-    likePost(objLikeData);
-    setLikeCheck((prev) => [...prev, post.postId + ""]);
-  };
-
+  
   const getLimitedContent = (htmlString: string) => {
     const lines = htmlString.split(/<\/?[^>]+>/).filter(Boolean);
     const limitedLines = lines.slice(0, 40).join(" ");
     return limitedLines;
   };
   return (
-    <div className="invisible-scrollbar" onScroll={(e) => handleScroll(e)}>
-      {personalPosts.map((post: PostDTO) => (
+    <div className="invisible-scrollbar" >
+      {data&&data.map((post: PostDTO) => (
         <Card
           key={post.postId} // Use unique postId as the key
           bordered={true}
           style={{ width: "100%" }}
-          onDoubleClick={() => handleLikes(post)}
         >
           {post.image && (
             <Image src={post.image} height={500} width={500} alt="image" />
@@ -77,16 +49,6 @@ const Posts: React.FC = () => {
             <strong>Tags:</strong>{" "}
             {Array.isArray(post.tags) ? post.tags.join(", ") : post.tags}
           </p>
-          <Flex gap={7} style={{marginTop:'2px'}}>
-            {likeCheck.includes(post.postId + "") ? (
-              <HeartFilled style={{ color: "red" }} label={post?.likes+''}/>
-            ) : (
-              <HeartOutlined onClick={() => handleLikes(post)} label={post?.likes+''}/>
-            )}
-            {post?.likes+''}
-              <CommentOutlined onClick={()=>{setCommentsActive(!commentsActive); setPostId(post.postId+'')}}/>
-            
-          </Flex>
           <Divider />
           <div
             dangerouslySetInnerHTML={{
