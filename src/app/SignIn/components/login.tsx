@@ -24,9 +24,9 @@ const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
 const LoginForm: React.FC = () => {
   const router = useRouter();
   onAuthStateChanged(auth, (user) => {
+    console.log('checked')
     if (user) {
       router.push("/Users");
-              window.location.href='/Users'
     }
   });
 
@@ -36,7 +36,7 @@ const LoginForm: React.FC = () => {
       const result = await signInWithPopup(auth, provider);
       const token = await result.user.getIdToken();
 
-      if(result){
+      if(result&&token){
         window.location.href='/Users'
         router.push("/Users");
         document.cookie = `token=${token}; path=/;`;
